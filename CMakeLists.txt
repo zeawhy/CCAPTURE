@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.5.0)
 project(CCAPTURE C)
 
 set(CMAKE_C_STANDARD 99)
