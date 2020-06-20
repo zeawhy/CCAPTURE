@@ -28,8 +28,8 @@ typedef struct {
 
 /*TCP*/
 typedef struct _TCP_HEADER {
-    short m_sSourPort;
-    short m_sDestPort;
+    unsigned short m_sSourPort;
+    unsigned short m_sDestPort;
     unsigned int m_uiSequNum;
     unsigned int m_uiAcknowledgeNum;
     unsigned char m_uiHeadOff;

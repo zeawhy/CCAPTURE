@@ -17,14 +17,13 @@ int main() {
     int ip_header_len = IP_HEADER_SIZE, tcp_header_len = TCP_HEADER_SIZE;
     unsigned char buffer[1500];
     struct in_addr des_addr, src_addr;
-
     if ((sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_IP))) < 0) {
         perror(strerror(errno));
         fprintf(stdout, "create socket error\n");
         exit(0);
     }
 
-    //while (1){
+    while (1){
     bzero(buffer, sizeof(buffer));
     n_read = recvfrom(sock, buffer, 2048, 0, NULL, NULL);
     if (n_read < (MAC_HEADER_SIZE + ip_header_len + UDP_HEADER_SIZE)) {
@@ -53,7 +52,7 @@ int main() {
 
     if (ip_header_len > 20 || ip_header_len > 60)
     {
-        exit(0);
+        continue;
     }
 
     memcpy(&des_addr, &pipHeader->dest_ip, 4);
@@ -75,7 +74,7 @@ int main() {
             PTCP_HEADER tcpHeader = (PTCP_HEADER) (buffer + MAC_HEADER_SIZE + ip_header_len);
             tcp_header_len = ((tcpHeader->m_uiHeadOff & 0xf0) >> 4) * 4;
             int data_len = total_len - ip_header_len - tcp_header_len;
-            printf("%s.%d-->%s.%d Len:%d\n", inet_ntoa(src_addr), tcpHeader->m_sSourPort, inet_ntoa(des_addr),
+            printf("%s.%u-->%s.%u Len:%d\n", inet_ntoa(src_addr), tcpHeader->m_sSourPort, inet_ntoa(des_addr),
                    tcpHeader->m_sDestPort, data_len);
             int tcp_data_index = MAC_HEADER_SIZE + ip_header_len + tcp_header_len;
             unsigned char *p = buffer + tcp_data_index;
@@ -101,7 +100,7 @@ int main() {
         default:
             printf("Unkown\n");
     }
-    //}
+    }
     close(sock);
     return 0;
 }
